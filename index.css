@@ -3,28 +3,46 @@
     padding: 0;
     box-sizing: border-box;
 }
-
 body {
     min-height: 100vh;
+    background: #0f172a;
+    color: #fff;
+    font-family: Arial, Helvetica, sans-serif;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #0f172a;
-    font-family: Arial, Helvetica, sans-serif;
-    color: #fff;
 }
-
 h1 {
-    margin-bottom: 10px;
-}
-
-.score-board {
     margin-bottom: 15px;
+}
+.top-bar {
+    width: 90vw;
+    max-width: 500px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+.score-board {
     font-size: 18px;
     font-weight: bold;
 }
-
+.controls button {
+    margin-left: 8px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+}
+#playPauseBtn {
+    background: #22c55e;
+}
+#restartBtn {
+    background: #ef4444;
+    color: #fff;
+}
 /* Game Grid */
 .game-container {
     width: 90vw;
@@ -33,7 +51,6 @@ h1 {
     grid-template-columns: repeat(4, 1fr);
     gap: 12px;
 }
-
 /* Card */
 .card {
     aspect-ratio: 1 / 1;
@@ -42,16 +59,13 @@ h1 {
     transition: transform 0.5s;
     cursor: pointer;
 }
-
 .card.flip {
     transform: rotateY(180deg);
 }
-
 .card.matched {
     pointer-events: none;
     opacity: 0.6;
 }
-
 /* Card Faces */
 .card-face {
     position: absolute;
@@ -64,15 +78,78 @@ h1 {
     font-size: 2rem;
     backface-visibility: hidden;
 }
-
 /* Back */
 .card-back {
     background: #2563eb;
 }
-
 /* Front */
 .card-front {
     background: #f8fafc;
     color: #0f172a;
     transform: rotateY(180deg);
+}
+/* Pause State */
+.game-container.paused {
+    pointer-events: none;
+    opacity: 0.6;
+}
+/* Tablets (portrait & landscape) */
+@media (max-width: 1023px) {
+    .top-bar {
+        max-width: 90vw;
+    }
+
+    .game-container {
+        max-width: 90vw;
+    }
+}
+/* Mobile devices */
+@media (max-width: 768px) {
+    h1 {
+        font-size: 24px;
+    }
+    .top-bar {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    .controls button {
+        padding: 6px 10px;
+        font-size: 14px;
+    }
+    .game-container {
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+    }
+    .card-face {
+        font-size: 1.7rem;
+    }
+}
+/* Small mobile devices */
+@media (max-width: 480px) {
+    h1 {
+        font-size: 22px;
+    }
+    .score-board {
+        font-size: 15px;
+    }
+    .controls button {
+        padding: 5px 8px;
+        font-size: 13px;
+    }
+    .game-container {
+        gap: 8px;
+    }
+    .card-face {
+        font-size: 1.5rem;
+    }
+}
+/* Extra small mobile devices */
+@media (max-width: 360px) {
+    h1 {
+        font-size: 20px;
+    }
+    .card-face {
+        font-size: 1.3rem;
+    }
 }
