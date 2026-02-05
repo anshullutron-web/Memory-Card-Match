@@ -5,8 +5,7 @@ var message = document.getElementById("gameMessage");
 var playPauseBtn = document.getElementById("playPauseBtn");
 var restartBtn = document.getElementById("restartBtn");
 /* TIME VARIABLES */
-var TOTAL_TIME = 90;
-var timeLeft = TOTAL_TIME;
+var timeTaken = 0;
 var timer;
 /* GAME VARIABLES */
 var firstCard = null;
@@ -14,6 +13,7 @@ var secondCard = null;
 var lock = true;
 var paused = false;
 var matched = 0;
+var gameOver = false;
 /* CARD VALUES */
 var cardsData = [
     "🍎","🍎","🍌","🍌",
@@ -23,9 +23,7 @@ var cardsData = [
 ];
 /* SHUFFLE FUNCTION */
 function shuffle(array) {
-    var i;
-    var j;
-    var temp;
+    var i, j, temp;
     for (i = array.length - 1; i > 0; i--) {
         j = Math.floor(Math.random() * (i + 1));
         temp = array[i];
@@ -35,8 +33,7 @@ function shuffle(array) {
 }
 /* CREATE GAME BOARD */
 function createBoard(values) {
-    var i;
-    var card;
+    var i, card;
     gameBoard.innerHTML = "";
     for (i = 0; i < values.length; i++) {
         card = document.createElement("div");
@@ -51,57 +48,46 @@ function createBoard(values) {
 }
 /* PREVIEW PHASE */
 function previewCards() {
-    var cards;
+    var previewArray = cardsData.slice();
+    shuffle(previewArray);
+    createBoard(previewArray);
+    var cards = document.getElementsByClassName("card");
     var i;
-    createBoard(cardsData);
-    cards = document.getElementsByClassName("card");
     for (i = 0; i < cards.length; i++) {
         cards[i].classList.add("flip");
     }
+    lock = true;
+    gameOver = false;
     setTimeout(startGame, 3000);
 }
-/* START ACTUAL GAME */
+/* START GAME */
 function startGame() {
-    var shuffled;
-    var i;
-    shuffled = [];
-    for (i = 0; i < cardsData.length; i++) {
-        shuffled[i] = cardsData[i];
-    }
-    shuffle(shuffled);
-    createBoard(shuffled);
-    timeLeft = TOTAL_TIME;
-    timerText.innerHTML = timeLeft
+    var gameArray = cardsData.slice();
+    shuffle(gameArray);
+    createBoard(gameArray);
+    timeTaken = 0;
+    timerText.innerHTML = timeTaken;
     lock = false;
+    matched = 0;
     startTimer();
 }
-/* TIMER FUNCTION */
+/* TIMER */
 function startTimer() {
     clearInterval(timer);
     timer = setInterval(function () {
-        if (paused === false) {
-            timeLeft = timeLeft - 1;
-            timerText.innerHTML = timeLeft;
-            if (timeLeft <= 0) {
-                endGame(false);
-            }
+        if (paused === false && gameOver === false) {
+            timeTaken = timeTaken + 1;
+            timerText.innerHTML = timeTaken;
         }
     }, 1000);
 }
-/* FLIP CARD FUNCTION */
+/* FLIP CARD */
 function flipCard() {
-    if (lock === true) {
-        return;
-    }
-    if (paused === true) {
-        return;
-    }
-    if (this === firstCard) {
-        return;
-    }
-    if (this.classList.contains("matched")) {
-        return;
-    }
+    if (lock === true) return;
+    if (paused === true) return;
+    if (gameOver === true) return;
+    if (this === firstCard) return;
+    if (this.classList.contains("matched")) return;
     this.classList.add("flip");
     if (firstCard === null) {
         firstCard = this;
@@ -119,7 +105,7 @@ function checkMatch() {
         matched = matched + 1;
         resetTurn();
         if (matched === cardsData.length / 2) {
-            endGame(true);
+            endGame();
         }
     } else {
         setTimeout(function () {
@@ -136,16 +122,13 @@ function resetTurn() {
     lock = false;
 }
 /* END GAME */
-function endGame(win) {
+function endGame() {
     clearInterval(timer);
+    gameOver = true;
     lock = true;
-    if (win === true) {
-        message.innerHTML = "🎉 You won! All pairs matched in time.";
-    } else {
-        message.innerHTML = "⏱ Time over! Try again.";
-    }
+    message.innerHTML = "🎉 You won in " + timeTaken + " seconds!";
 }
-/* PLAY or PAUSE BUTTON */
+/* PLAY or PAUSE */
 playPauseBtn.onclick = function () {
     if (paused === false) {
         paused = true;
@@ -155,13 +138,12 @@ playPauseBtn.onclick = function () {
         playPauseBtn.innerHTML = "Pause";
     }
 };
-/* RESTART BUTTON */
+/* RESTART */
 restartBtn.onclick = function () {
     clearInterval(timer);
-    matched = 0;
-    message.innerHTML = "";
     paused = false;
     playPauseBtn.innerHTML = "Pause";
+    message.innerHTML = "";
     lock = true;
     previewCards();
 };
