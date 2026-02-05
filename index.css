@@ -58,13 +58,15 @@ h1 {
     transform-style: preserve-3d;
     transition: transform 0.5s;
     cursor: pointer;
+    perspective: 1000px;
 }
 .card.flip {
     transform: rotateY(180deg);
 }
+/* IMPORTANT: matched cards stay visible */
 .card.matched {
     pointer-events: none;
-    opacity: 0.6;
+    opacity: 1;
 }
 /* Card Faces */
 .card-face {
@@ -93,63 +95,27 @@ h1 {
     pointer-events: none;
     opacity: 0.6;
 }
-/* Tablets (portrait & landscape) */
-@media (max-width: 1023px) {
-    .top-bar {
-        max-width: 90vw;
-    }
-
-    .game-container {
-        max-width: 90vw;
-    }
+/* Winning Message */
+.gameMessage {
+    margin-top: 15px;
+    font-size: 18px;
+    font-weight: bold;
+    min-height: 24px;
+    text-align: center;
 }
-/* Mobile devices */
+/* Tablet & Mobile */
 @media (max-width: 768px) {
-    h1 {
-        font-size: 24px;
-    }
     .top-bar {
         flex-direction: column;
         gap: 10px;
-        text-align: center;
     }
-    .controls button {
-        padding: 6px 10px;
-        font-size: 14px;
-    }
-    .game-container {
-        grid-template-columns: repeat(4, 1fr);
-        gap: 10px;
-    }
+
     .card-face {
-        font-size: 1.7rem;
+        font-size: 1.6rem;
     }
 }
-/* Small mobile devices */
 @media (max-width: 480px) {
-    h1 {
-        font-size: 22px;
-    }
-    .score-board {
-        font-size: 15px;
-    }
-    .controls button {
-        padding: 5px 8px;
-        font-size: 13px;
-    }
-    .game-container {
-        gap: 8px;
-    }
     .card-face {
-        font-size: 1.5rem;
-    }
-}
-/* Extra small mobile devices */
-@media (max-width: 360px) {
-    h1 {
-        font-size: 20px;
-    }
-    .card-face {
-        font-size: 1.3rem;
+        font-size: 1.4rem;
     }
 }
