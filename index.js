@@ -149,3 +149,4 @@ restartBtn.onclick = function () {
 };
 /* START GAME */
 previewCards();
+/* Thank-You */
